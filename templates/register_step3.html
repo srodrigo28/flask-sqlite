@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="logo-container">
+    <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+    <div class="logo-title">EduPortal</div>
+    <div class="logo-subtitle">Crie sua conta gratuita</div>
+</div>
+
+<div class="steps-container">
+    <div class="step completed">
+        <div class="step-circle"><i class="fas fa-check"></i></div>
+        <div class="step-label">Conta</div>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step completed">
+        <div class="step-circle"><i class="fas fa-check"></i></div>
+        <div class="step-label">Perfil</div>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step active">
+        <div class="step-circle">3</div>
+        <div class="step-label">Endereço</div>
+    </div>
+</div>
+
+<div class="form-container">
+    <div class="form-header">
+        <h2>Endereço</h2>
+        <p>Informe seu CEP para preenchimento automático</p>
+    </div>
+
+    <div id="cep-error" class="error-text" style="display:none;">Erro ao buscar CEP.</div>
+
+    <form method="POST" action="{{ url_for('register_step3') }}">
+        <div class="form-group">
+            <label class="form-label">CEP</label>
+            <div class="input-with-action input-with-icon">
+                <i class="fas fa-map-marker-alt input-icon-left" style="z-index: 2;"></i>
+                <input type="text" name="cep" id="cep" class="form-control" placeholder="00000-000" maxlength="9">
+                <button type="button" class="btn-search" onclick="buscarCep()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div style="flex: 2;">
+                <label class="form-label">Rua / Logradouro</label>
+                <input type="text" name="street" id="street" class="form-control" placeholder="Nome da rua">
+            </div>
+
+            <div style="flex: 1;">
+                <label class="form-label">Número</label>
+                <input type="text" name="number" class="form-control" placeholder="Nº">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div>
+                <label class="form-label">Complemento</label>
+                <input type="text" name="complement" class="form-control" placeholder="Apto, sala...">
+            </div>
+
+            <div>
+                <label class="form-label">Bairro</label>
+                <input type="text" name="neighborhood" id="neighborhood" class="form-control" placeholder="Bairro">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div style="flex: 2;">
+                <label class="form-label">Cidade</label>
+                <input type="text" name="city" id="city" class="form-control" placeholder="Cidade">
+            </div>
+
+            <div style="flex: 1;">
+                <label class="form-label">Estado</label>
+                <input type="text" name="state" id="state" class="form-control" placeholder="UF" maxlength="2">
+            </div>
+        </div>
+
+        <div class="form-actions mt-4">
+            <a href="{{ url_for('register_step2') }}" class="btn btn-outline"
+                style="text-align: center; text-decoration: none;"><i class="fas fa-arrow-left"></i> Voltar</a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Criar conta</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('cep').addEventListener('input', function (e) {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,5})(\d{0,3})/);
+        e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2];
+    });
+
+    function buscarCep() {
+        const cep = document.getElementById('cep').value.replace(/\D/g, '');
+        const errorDiv = document.getElementById('cep-error');
+
+        if (cep.length === 8) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById('street').value = data.logradouro;
+                        document.getElementById('neighborhood').value = data.bairro;
+                        document.getElementById('city').value = data.localidade;
+                        document.getElementById('state').value = data.uf;
+                        errorDiv.style.display = 'none';
+                    } else {
+                        errorDiv.style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    errorDiv.style.display = 'block';
+                });
+        }
+    }
+</script>
+{% endblock %}

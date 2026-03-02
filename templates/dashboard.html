@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="welcome-card">
+    <div class="greeting">Boa tarde 👋</div>
+    <div class="user-name">{{ current_user.name.split(' ')[0] if current_user.name else 'Usuário' }}</div>
+    <div class="welcome-desc">Continue seu progresso. Você está indo muito bem!</div>
+
+    <div class="welcome-actions">
+        <button class="btn btn-sm btn-light-blue"><i class="far fa-calendar-alt"></i> Ver Agenda</button>
+        <button class="btn btn-sm btn-dark-transparent"><i class="fas fa-play"></i> Meus Cursos</button>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title">Pendentes</span>
+            <div class="stat-icon icon-yellow"><i class="fas fa-clock"></i></div>
+        </div>
+        <div class="stat-value">{{ pendentes }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title">Concluídas</span>
+            <div class="stat-icon icon-green"><i class="fas fa-check-circle"></i></div>
+        </div>
+        <div class="stat-value">{{ concluidas }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title">Matrículas</span>
+            <div class="stat-icon icon-blue"><i class="fas fa-book"></i></div>
+        </div>
+        <div class="stat-value">{{ matriculas }}</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title">Habilidades</span>
+            <div class="stat-icon icon-purple"><i class="fas fa-star"></i></div>
+        </div>
+        <div class="stat-value">{{ habilidades }}</div>
+    </div>
+</div>
+
+<div class="activities-section">
+    <div class="activities-header">
+        <h3>Próximas Atividades</h3>
+        <a href="#" class="view-all">Ver todas</a>
+    </div>
+
+    {% if tasks %}
+    <div class="task-list">
+        {% for task in tasks %}
+        <div class="task-item {{ 'concluida' if task.status == 'concluida' else 'pendente' }}">
+            <div class="task-info">
+                <h4>{{ task.name }}</h4>
+                <div class="task-meta">
+                    <span><i class="far fa-calendar"></i> Venc: {{ task.due_date.strftime('%d/%m/%Y') if task.due_date
+                        else 'Sem data' }}</span>
+                    <span><i class="fas fa-tag"></i> {{ task.category or 'Sem categoria' }}</span>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <form method="POST" action="{{ url_for('complete_task', task_id=task.id) }}">
+                    <button type="submit"
+                        class="btn btn-sm {{ 'btn-success' if task.status == 'pendente' else 'btn-outline' }}">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </form>
+                <form method="POST" action="{{ url_for('delete_task', task_id=task.id) }}">
+                    <button type="submit" class="btn btn-sm btn-outline"
+                        style="color: #ff5252; border-color: rgba(255,82,82,0.3);">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-list-ul"></i></div>
+        <div class="empty-text">Nenhuma atividade ainda.</div>
+        <a href="#" class="add-link" onclick="openForm(event)">Adicionar atividade &rarr;</a>
+    </div>
+    {% endif %}
+
+    {% if tasks %}
+    <div class="text-center mt-4">
+        <a href="#" class="add-link" onclick="openForm(event)">Adicionar atividade &rarr;</a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal for creating tasks -->
+<div id="addForm" class="task-form-overlay">
+    <div class="task-form-card">
+        <div class="form-header flex justify-between"
+            style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Nova Atividade</h2>
+            <button onclick="closeForm()"
+                style="background: none; border: none; color: var(--text-gray); font-size: 20px; cursor: pointer;">&times;</button>
+        </div>
+
+        <form method="POST" action="{{ url_for('add_task') }}">
+            <div class="form-group">
+                <label class="form-label">Nome da tarefa</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-tasks input-icon-left"></i>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Descrição</label>
+                <textarea name="description" class="form-control" rows="3" style="resize: none;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Categoria</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-tag input-icon-left"></i>
+                    <input type="text" name="category" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Data de Vencimento</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-calendar-alt input-icon-left"></i>
+                    <input type="datetime-local" name="due_date" class="form-control">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4">Salvar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openForm(e) {
+        if (e) e.preventDefault();
+        document.getElementById('addForm').classList.add('active');
+    }
+
+    function closeForm() {
+        document.getElementById('addForm').classList.remove('active');
+    }
+</script>
+
+{% endblock %}

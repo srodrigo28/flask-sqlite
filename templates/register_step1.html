@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="logo-container">
+    <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+    <div class="logo-title">EduPortal</div>
+    <div class="logo-subtitle">Crie sua conta gratuita</div>
+</div>
+
+<div class="steps-container">
+    <div class="step active">
+        <div class="step-circle">1</div>
+        <div class="step-label">Conta</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+        <div class="step-circle">2</div>
+        <div class="step-label">Perfil</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+        <div class="step-circle">3</div>
+        <div class="step-label">Endereço</div>
+    </div>
+</div>
+
+<div class="form-container">
+    <div class="form-header">
+        <h2>Dados de acesso</h2>
+        <p>Configure seu e-mail e senha</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('register_step1') }}">
+        <div class="form-group">
+            <label class="form-label">E-mail *</label>
+            <div class="input-with-icon">
+                <i class="fas fa-envelope input-icon-left"></i>
+                <input type="email" name="email" class="form-control" placeholder="seu@email.com" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Senha *</label>
+            <div class="input-with-icon">
+                <i class="fas fa-lock input-icon-left"></i>
+                <input type="password" name="password" id="pass" class="form-control" placeholder="Mínimo 6 caracteres"
+                    required minlength="6">
+                <i class="fas fa-eye input-icon-right"
+                    onclick="const input = this.previousElementSibling; if(input.type === 'password'){input.type = 'text'; this.classList.replace('fa-eye', 'fa-eye-slash');}else{input.type = 'password'; this.classList.replace('fa-eye-slash', 'fa-eye');}"></i>
+            </div>
+
+            <div class="password-req">
+                <div class="req-line" id="r1"></div>
+                <div class="req-line" id="r2"></div>
+                <div class="req-line" id="r3"></div>
+                <div class="req-line" id="r4"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Confirmar senha *</label>
+            <div class="input-with-icon">
+                <i class="fas fa-lock input-icon-left"></i>
+                <input type="password" name="confirm_password" class="form-control" placeholder="Repita a senha"
+                    required minlength="6">
+                <i class="fas fa-eye input-icon-right"
+                    onclick="const input = this.previousElementSibling; if(input.type === 'password'){input.type = 'text'; this.classList.replace('fa-eye', 'fa-eye-slash');}else{input.type = 'password'; this.classList.replace('fa-eye-slash', 'fa-eye');}"></i>
+            </div>
+        </div>
+
+        <div class="form-actions mt-4">
+            <button type="submit" class="btn btn-primary">Continuar <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('pass').addEventListener('input', function (e) {
+        const val = e.target.value;
+        document.getElementById('r1').className = 'req-line' + (val.length > 0 ? ' valid' : '');
+        document.getElementById('r2').className = 'req-line' + (val.length >= 4 ? ' valid' : '');
+        document.getElementById('r3').className = 'req-line' + (val.length >= 6 ? ' valid' : '');
+        document.getElementById('r4').className = 'req-line' + (val.length >= 8 ? ' valid' : '');
+    });
+</script>
+
+<div class="bottom-links">
+    Já tem uma conta? <a href="{{ url_for('login') }}">Entrar</a>
+</div>
+{% endblock %}
