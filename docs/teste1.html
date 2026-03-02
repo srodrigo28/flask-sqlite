@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocker - Orçamentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            bg: '#0b0e14',      // Fundo principal escuro
+                            surface: '#151822', // Fundo de cards e sidebar
+                            border: '#232838',  // Bordas
+                            hover: '#1c212f'    // Hover das linhas
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar estilizada para o tema escuro */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0b0e14;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #232838;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-dark-bg text-gray-300 font-sans h-screen flex overflow-hidden selection:bg-blue-500 selection:text-white">
+
+    <aside class="w-64 bg-dark-surface border-r border-dark-border flex flex-col h-full flex-shrink-0">
+        <div class="p-6 flex items-center gap-3">
+            <div class="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center text-white">
+                <i class="ph-fill ph-lightning text-xl"></i>
+            </div>
+            <span class="text-white font-bold text-xl tracking-wide">Rocker</span>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1">
+
+            <div class="text-xs font-semibold text-gray-500 px-3 mb-2 uppercase tracking-wider">Principal</div>
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-dark-hover transition-colors">
+                <i class="ph ph-house text-lg"></i> Dashboard
+            </a>
+
+            <div class="text-xs font-semibold text-gray-500 px-3 mb-2 mt-6 uppercase tracking-wider">Aplicações</div>
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-dark-hover transition-colors">
+                <i class="ph ph-calendar-blank text-lg"></i> Agendamentos
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-dark-hover transition-colors">
+                <i class="ph ph-check-circle text-lg"></i> Tarefas
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-dark-hover transition-colors">
+                <i class="ph ph-wallet text-lg"></i> Financeiro
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-dark-hover transition-colors">
+                <i class="ph ph-package text-lg"></i> Produtos
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-dark-hover transition-colors">
+                <i class="ph ph-users text-lg"></i> Clientes
+            </a>
+
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[#1a243d] text-blue-400 font-medium transition-colors">
+                <i class="ph-fill ph-clipboard-text text-lg"></i> Orçamentos
+            </a>
+
+            <a href="#"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-dark-hover transition-colors mt-2">
+                <i class="ph ph-wrench text-lg"></i> Serviços
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto p-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-5 flex items-start justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold mb-1 uppercase tracking-wide">Total Orçamentos</p>
+                    <p class="text-2xl font-bold text-white">3</p>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-[#1a243d] text-blue-500 flex items-center justify-center">
+                    <i class="ph-fill ph-clipboard-text text-xl"></i>
+                </div>
+            </div>
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-5 flex items-start justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold mb-1 uppercase tracking-wide">Valor Aprovado</p>
+                    <p class="text-2xl font-bold text-[#4ade80]">R$ 359,99</p>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-[#12281e] text-[#4ade80] flex items-center justify-center">
+                    <i class="ph-fill ph-check-circle text-xl"></i>
+                </div>
+            </div>
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-5 flex items-start justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold mb-1 uppercase tracking-wide">Últimos 30 Dias</p>
+                    <p class="text-2xl font-bold text-white">3</p>
+                    <p class="text-sm text-gray-500 mt-1">Novos orçamentos</p>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-[#332b14] text-yellow-500 flex items-center justify-center">
+                    <i class="ph-fill ph-calendar-blank text-xl"></i>
+                </div>
+            </div>
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-5 flex items-start justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 font-semibold mb-1 uppercase tracking-wide">Ticket Médio</p>
+                    <p class="text-2xl font-bold text-[#c084fc]">R$ 120,35</p>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-[#2e1d3d] text-[#c084fc] flex items-center justify-center">
+                    <i class="ph-fill ph-trend-up text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+                    <i class="ph-fill ph-clipboard-text text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white">Orçamentos</h1>
+                    <p class="text-gray-400 text-sm mt-0.5">Gerencie propostas e acompanhe status</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="relative group">
+                    <i
+                        class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors"></i>
+                    <input type="text" placeholder="Buscar Cliente ou Placa"
+                        class="bg-dark-surface border border-dark-border text-sm rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all w-64 placeholder-gray-500 text-white">
+                </div>
+                <button
+                    class="bg-dark-surface border border-dark-border p-2.5 rounded-lg text-gray-400 hover:text-white hover:border-gray-600 transition-all">
+                    <i class="ph ph-list-dashes text-lg"></i>
+                </button>
+                <button
+                    class="bg-dark-surface border border-dark-border p-2.5 rounded-lg text-gray-400 hover:text-white hover:border-gray-600 transition-all">
+                    <i class="ph ph-chart-pie-slice text-lg"></i>
+                </button>
+                <button
+                    class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-lg transition-colors shadow-lg shadow-blue-600/20"
+                    onclick="alert('Adicionar novo orçamento!')">
+                    <i class="ph ph-plus text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-dark-surface border border-[#1d2d3d] rounded-xl overflow-hidden shadow-2xl relative">
+            <div
+                class="absolute top-0 left-0 bg-[#0d2a23] border border-[#164e3c] text-[#4ade80] text-[10px] font-bold px-2 py-0.5 rounded-br-lg z-10">
+                DataTable
+            </div>
+
+            <div class="overflow-x-auto mt-4">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-dark-border text-xs text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-4 font-medium">ID</th>
+                            <th class="px-6 py-4 font-medium">Status</th>
+                            <th class="px-6 py-4 font-medium">Cliente/Veículo</th>
+                            <th class="px-6 py-4 font-medium">Data</th>
+                            <th class="px-6 py-4 font-medium">Valor Total</th>
+                            <th class="px-6 py-4 font-medium text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
+
+            <div
+                class="px-6 py-4 border-t border-dark-border flex items-center justify-end gap-6 text-sm text-gray-400">
+                <div class="flex items-center gap-2">
+                    <span>Rows per page:</span>
+                    <select class="bg-transparent text-white outline-none cursor-pointer">
+                        <option value="5" class="bg-dark-surface">5</option>
+                        <option value="10" class="bg-dark-surface">10</option>
+                    </select>
+                </div>
+                <span>1-4 of 4</span>
+                <div class="flex gap-2">
+                    <button class="p-1 text-gray-600 cursor-not-allowed"><i class="ph ph-caret-left"></i></button>
+                    <button class="p-1 hover:text-white transition-colors"><i class="ph ph-caret-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Dados de exemplo baseados na sua imagem
+        const tableData = [
+            { id: '#1', date: '15/08/2025', client: 'Padaria do Joaquim', vehicle: 'OGP-6509 - GOL 1.5 Plus 8v 2p', value: 'R$ 180,00' },
+            { id: '#1', date: '15/08/2025', client: 'Padaria do Joaquim', vehicle: 'OGP-6509 - GOL 1.5 Plus 8v 2p', value: 'R$ 180,00' },
+            { id: '#1', date: '15/08/2025', client: 'Padaria do Joaquim', vehicle: 'OGP-6509 - GOL 1.5 Plus 8v 2p', value: 'R$ 180,00' },
+            { id: '#1', date: '15/08/2025', client: 'Padaria do Joaquim', vehicle: 'OGP-6509 - GOL 1.5 Plus 8v 2p', value: 'R$ 180,00' }
+        ];
+
+        // Função para renderizar as linhas na tabela
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            let rowsHtml = '';
+
+            tableData.forEach(row => {
+                rowsHtml += `
+                    <tr class="border-b border-dark-border hover:bg-dark-hover transition-colors group">
+                        <td class="px-6 py-4 text-sm text-gray-400">${row.id}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-[#242938] text-gray-300 text-xs px-2.5 py-1 rounded-md font-medium border border-[#31384c]">Orçamento</span>
+                                <span class="bg-[#12281e] text-[#4ade80] text-xs px-2.5 py-1 rounded-md font-medium border border-[#1b3b2c]">Aprovado</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-gray-200">${row.client}</div>
+                            <div class="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
+                                <i class="ph-fill ph-car-profile text-gray-400"></i> ${row.vehicle}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-400">${row.date}</td>
+                        <td class="px-6 py-4 text-sm font-semibold text-white">${row.value}</td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-3 text-gray-400">
+                                <button class="hover:text-white transition-colors" title="Visualizar"><i class="ph ph-eye text-lg"></i></button>
+                                <button class="hover:text-white transition-colors" title="Imprimir"><i class="ph ph-printer text-lg"></i></button>
+                                <button class="hover:text-yellow-400 transition-colors" title="Ação Rápida"><i class="ph-fill ph-lightning text-lg"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = rowsHtml;
+        }
+
+        // Renderiza a tabela ao carregar a página
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+
+</html>
