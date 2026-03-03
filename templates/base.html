@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,30 +9,83 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
-    <div class="app-container">
-        {% if current_user.is_authenticated and request.endpoint not in ['login', 'register_step1', 'register_step2', 'register_step3'] %}
-        <header class="app-header">
-            <button class="menu-btn"><i class="fas fa-bars"></i></button>
-            <h1 class="header-title">Dashboard</h1>
-            <div class="header-actions">
-                <a href="{{ url_for('profile') }}" class="profile-link"><i class="fas fa-user-circle"></i></a>
-                <a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i></a>
+    <div
+        class="app-container {% if current_user.is_authenticated and request.endpoint not in ['login', 'register_step1', 'register_step2', 'register_step3'] %}is-logged-in{% endif %}">
+        {% if current_user.is_authenticated and request.endpoint not in ['login', 'register_step1', 'register_step2',
+        'register_step3'] %}
+        <!-- Sidebar -->
+        <aside class="app-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon-small"><i class="fas fa-graduation-cap"></i></div>
+                <span class="logo-title-small">Gerenciador de Tarefas</span>
+                <button class="close-sidebar-btn"
+                    onclick="document.getElementById('sidebar').classList.remove('active')"><i
+                        class="fas fa-times"></i></button>
             </div>
-        </header>
-        {% endif %}
-        
-        <main class="app-content">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard') }}"
+                    class="sidebar-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('clients') }}"
+                    class="sidebar-link {% if request.endpoint in ['clients', 'add_client'] %}active{% endif %}">
+                    <i class="fas fa-users"></i> <span>Clientes</span>
+                </a>
+                <a href="{{ url_for('profile') }}"
+                    class="sidebar-link {% if request.endpoint == 'profile' %}active{% endif %}">
+                    <i class="fas fa-user-circle"></i> <span>Perfil</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="sidebar-link">
+                    <i class="fas fa-sign-out-alt"></i> <span>Sair</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <header class="app-header">
+                <button class="menu-btn" onclick="document.getElementById('sidebar').classList.add('active')"><i
+                        class="fas fa-bars"></i></button>
+                <h1 class="header-title">
+                    {% if request.endpoint == 'dashboard' %} Dashboard
+                    {% elif request.endpoint == 'profile' %} Perfil
+                    {% else %} EduPortal {% endif %}
+                </h1>
+                <div class="header-actions">
+                    <a href="{{ url_for('profile') }}" class="profile-link"><i class="fas fa-user-circle"></i></a>
+                </div>
+            </header>
+
+            <main class="app-content">
+                {% else %}
+                <!-- View for Login/Register Pages -->
+                <main class="app-content app-content-auth">
+                    {% endif %}
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
                     {% endfor %}
-                {% endif %}
-            {% endwith %}
-            
-            {% block content %}{% endblock %}
+                    {% endif %}
+                    {% endwith %}
+
+                    {% block content %}{% endblock %}
+
+                    {% if current_user.is_authenticated and request.endpoint not in ['login', 'register_step1',
+                    'register_step2', 'register_step3'] %}
+                </main>
+        </div>
+        {% else %}
         </main>
+        {% endif %}
     </div>
 </body>
+
 </html>

@@ -100,8 +100,14 @@
     });
 
     document.getElementById('cep').addEventListener('input', function (e) {
-        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,5})(\d{0,3})/);
+        let rawValue = e.target.value.replace(/\D/g, '');
+        let x = rawValue.match(/(\d{0,5})(\d{0,3})/);
         e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2];
+
+        // Dispara busca automaticamente se tiver 8 dígitos
+        if (rawValue.length === 8) {
+            buscarCep();
+        }
     });
 
     function buscarCep() {

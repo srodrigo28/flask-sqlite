@@ -8,7 +8,8 @@ REQUIRED_PACKAGES = [
     "Flask",
     "Flask-SQLAlchemy",
     "Flask-Login",
-    "Werkzeug"
+    "Werkzeug",
+    "python-dotenv"
 ]
 
 def in_venv():

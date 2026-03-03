@@ -1,13 +1,17 @@
 import os
 from datetime import datetime
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# Carrega as variáveis do .env
+load_dotenv()
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'my-super-secret-key-123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-key')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI', 'sqlite:///database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -34,6 +38,26 @@ class User(UserMixin, db.Model):
     state = db.Column(db.String(20), nullable=True)
 
     tasks = db.relationship('Task', backref='user', lazy=True)
+    clients = db.relationship('Client', backref='user', lazy=True)
+
+class Client(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String(150), nullable=False)
+    client_type = db.Column(db.String(50), nullable=False) # 'Empresa' ou 'Pessoa'
+    phone = db.Column(db.String(20), nullable=True)
+    
+    # Endereço
+    cep = db.Column(db.String(20), nullable=True)
+    street = db.Column(db.String(150), nullable=True)
+    number = db.Column(db.String(20), nullable=True)
+    complement = db.Column(db.String(100), nullable=True)
+    neighborhood = db.Column(db.String(100), nullable=True)
+    city = db.Column(db.String(100), nullable=True)
+    state = db.Column(db.String(20), nullable=True)
+    
+    service_type = db.Column(db.String(50), nullable=False) # 'Contrato' ou 'Atendimento Único'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -228,6 +252,39 @@ def profile():
         
     return render_template('profile.html')
 
+@app.route('/clients')
+@login_required
+def clients():
+    page = request.args.get('page', 1, type=int)
+    # Paginação de 10 em 10 clientes
+    pagination = Client.query.filter_by(user_id=current_user.id).order_by(Client.created_at.desc()).paginate(page=page, per_page=10, error_out=False)
+    return render_template('clients.html', pagination=pagination)
+
+@app.route('/clients/add', methods=['GET', 'POST'])
+@login_required
+def add_client():
+    if request.method == 'POST':
+        new_client = Client(
+            user_id=current_user.id,
+            name=request.form.get('name'),
+            client_type=request.form.get('client_type'),
+            phone=request.form.get('phone'),
+            cep=request.form.get('cep'),
+            street=request.form.get('street'),
+            number=request.form.get('number'),
+            complement=request.form.get('complement'),
+            neighborhood=request.form.get('neighborhood'),
+            city=request.form.get('city'),
+            state=request.form.get('state'),
+            service_type=request.form.get('service_type')
+        )
+        db.session.add(new_client)
+        db.session.commit()
+        flash('Cliente cadastrado com sucesso!', 'success')
+        return redirect(url_for('clients'))
+        
+    return render_template('add_client.html')
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -237,7 +294,25 @@ def logout():
 def init_db():
     with app.app_context():
         db.create_all()
+        # Cria usuário default se não existir
+        default_email = os.environ.get('DEFAULT_USER_EMAIL')
+        default_password = os.environ.get('DEFAULT_USER_PASSWORD')
+        default_name = os.environ.get('DEFAULT_USER_NAME', 'Administrador')
+        
+        if default_email and default_password:
+            user = User.query.filter_by(email=default_email).first()
+            if not user:
+                new_user = User(
+                    email=default_email,
+                    password_hash=generate_password_hash(default_password, method='scrypt'),
+                    name=default_name
+                )
+                db.session.add(new_user)
+                db.session.commit()
+                print(f"[*] Usuário predefinido '{default_email}' criado com sucesso.")
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True, port=5000)
+    
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, port=port)
